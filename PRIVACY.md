@@ -1,51 +1,55 @@
 # TrackMeNot 1.0 — Privacy
 
-## Что расширение делает
+TrackMeNot 1.0 is available in 10 interface languages. Language choice does not change what data is processed or where it goes.
 
-- Периодически отправляет синтетические поисковые запросы на **выбранные вами**
-  поисковики. Интерфейс доступен на 10 языках; данные при этом не покидают браузер.
-- Хранит настройки, свои слова, статистику и (опционально) лог в `chrome.storage.local`.
-- Читает `.txt`-файл со словами только по вашему выбору, локально, через файловый input.
+## What the extension does
 
-## Чего оно не делает
+- Periodically sends synthetic search queries to the **search engines you select**.
+- Stores settings, custom words, statistics and (optionally) a local log in `chrome.storage.local`.
+- Reads a `.txt` word list only when you choose it, locally through a file input.
 
-- Не читает cookies и не отправляет их.
-- Не внедряется в страницы (нет content scripts).
-- Не читает историю, вкладки, закладки, буфер обмена, формы и содержимое страниц.
-- Не использует `chrome.storage.sync`, аналитику, телеметрию, внешние API и remote code.
-- Не кликает по рекламе и результатам выдачи.
-- Не открывает вкладки.
+## What it does not do
 
-## Какие permissions нужны
+- It does not read or send cookies.
+- It does not inject into pages (no content scripts).
+- It does not read history, tabs, bookmarks, clipboard, forms or page content.
+- It does not use `chrome.storage.sync`, analytics, telemetry, external APIs or remote code.
+- It does not click ads or search results.
+- It does not open tabs.
 
-| Permission | Зачем |
+## Permissions
+
+| Permission | Why |
 |---|---|
-| `storage` | Настройки, слова, статистика и лог локально |
-| `alarms` | Одноразовый таймер следующего запроса |
-| `host_permissions` на поисковики | `fetch` к выбранным поисковым доменам |
+| `storage` | Settings, words, statistics and logs stay local |
+| `alarms` | One-shot timer for the next query |
+| `host_permissions` for search engines | `fetch` to the selected search domains |
 
-Нет `cookies`, `tabs`, `history`, `webNavigation`, `scripting`, `<all_urls>`.
+No `cookies`, `tabs`, `history`, `webNavigation`, `scripting` or `<all_urls>`.
 
-## Что всё равно видно поисковику
+## What the search engine can still see
 
-- ваш IP-адрес;
-- факт HTTP-запроса и его время;
-- сам синтетический запрос;
-- заголовки, которые браузер отправляет при `fetch` (включая возможный
-  `Origin: chrome-extension://…`).
+- your IP address;
+- the fact and time of the HTTP request;
+- the synthetic query itself;
+- headers normally sent by a browser `fetch` (including a possible `Origin: chrome-extension://…`).
 
-Cookies, Referer и данные вашего аккаунта не отправляются, но это **не делает вас
-анонимным**. Для сетевой анонимности используйте VPN/Tor и отдельный профиль браузера.
+Cookies, Referer and account data are not sent, but this does **not** make you anonymous. Use VPN/Tor and a separate browser profile if you need network anonymity.
 
-## Логи
+## Logs
 
-По умолчанию логи выключены. Если включить:
+Logs are disabled by default. If enabled:
 
-- пишутся только метаданные (время, движок, статус, длительность);
-- текст запросов пишется только при отдельной галочке;
-- лог хранится локально, ограничен по размеру и может быть очищен/экспортирован в `.txt`.
+- only metadata is written by default (time, engine, status, duration);
+- query text is written only with a separate opt-in;
+- the log is local, size-limited, and can be cleared or exported to `.txt`.
 
-## Удаление данных
+## Delete data
 
-Кнопка «Стереть все данные» в настройках удаляет настройки, свои слова, лог и статистику
-из `chrome.storage.local`. Удаление расширения также удаляет его локальные данные.
+The **Erase all data** button removes settings, custom words, logs and statistics from `chrome.storage.local`. Uninstalling the extension also removes its local data.
+
+---
+
+## Кратко по-русски
+
+Расширение отправляет синтетические запросы только на выбранные поисковики, не читает и не отправляет cookies, не внедряется в страницы, не читает историю и вкладки, не использует sync и аналитику. Настройки, слова, статистика и логи хранятся локально в `chrome.storage.local`. Запросы всё равно уходят с вашего IP на выбранный поисковик — это не анонимность; для сети используйте VPN/Tor и отдельный профиль. Логи по умолчанию выключены; текст запросов пишется только по отдельному согласию.
