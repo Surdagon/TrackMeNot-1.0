@@ -73,6 +73,58 @@
         <p class="inline-note" id="statusNote"></p>
       </section>
 
+      <section class="card card--wide">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="themeTitle">Theme</h2>
+            <p class="muted" data-i18n="themeDesc">Choose a preset or set colors and font manually.</p>
+          </div>
+        </div>
+
+        <div class="theme-grid">
+          <div class="field">
+            <label for="themePreset" data-i18n="themePreset">Preset</label>
+            <select id="themePreset"></select>
+          </div>
+          <div class="field">
+            <label for="themeFont" data-i18n="themeFont">Font</label>
+            <select id="themeFont"></select>
+          </div>
+          <div class="field">
+            <label for="themeFontSize" data-i18n="themeFontSize">Font size</label>
+            <input id="themeFontSize" type="number" min="12" max="20" step="1" inputmode="numeric">
+          </div>
+          <div class="theme-colors">
+            <label class="theme-color" for="themeBackground">
+              <span data-i18n="themeBackground">Background</span>
+              <input type="color" id="themeBackground">
+            </label>
+            <label class="theme-color" for="themeSurface">
+              <span data-i18n="themeSurface">Cards</span>
+              <input type="color" id="themeSurface">
+            </label>
+            <label class="theme-color" for="themeText">
+              <span data-i18n="themeText">Text</span>
+              <input type="color" id="themeText">
+            </label>
+            <label class="theme-color" for="themeAccent">
+              <span data-i18n="themeAccent">Accent</span>
+              <input type="color" id="themeAccent">
+            </label>
+          </div>
+        </div>
+
+        <div class="theme-preview" id="themePreview">
+          <span class="theme-preview__eyebrow" data-i18n="themePreviewTitle">Interface preview</span>
+          <strong class="theme-preview__title" data-i18n="appName">TrackMeNot 1.0</strong>
+          <p data-i18n="themePreviewText">This is how the interface text will look. Choose a preset or customize colors and font.</p>
+        </div>
+
+        <div class="actions actions--tight">
+          <button class="btn btn--small" id="themeReset" type="button" data-i18n="themeReset">Reset theme</button>
+        </div>
+      </section>
+
       <section class="card">
         <div class="card__header">
           <div>

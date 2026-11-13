@@ -12,6 +12,7 @@ import {
   parseCustomWords,
   safeNumber
 } from './util.js';
+import { sanitizeTheme } from './theme.js';
 
 export function mergeSettings(stored) {
   const source = stored && typeof stored === 'object' ? stored : {};
@@ -95,6 +96,7 @@ export function sanitizeSettings(input) {
 
   settings.localOnly = Boolean(settings.localOnly);
   settings.simulateClicks = Boolean(settings.simulateClicks);
+  settings.theme = sanitizeTheme(settings.theme);
   settings.loggingEnabled = Boolean(settings.loggingEnabled);
   settings.logQueries = Boolean(settings.logQueries);
   settings.maxLogEntries = clamp(

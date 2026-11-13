@@ -15,6 +15,12 @@ import {
   t
 } from './src/i18n.js';
 import {
+  DEFAULT_THEME,
+  THEME_PRESETS,
+  applyTheme,
+  sanitizeTheme
+} from './src/theme.js';
+import {
   clearLog as clearStoredLog,
   readLog,
   readRuntime,
@@ -137,6 +143,8 @@ function renderEngineList() {
 function fillForm(nextSettings) {
   settings = nextSettings;
   $('#version').textContent = APP_VERSION;
+  populateThemeControls(settings.theme?.preset);
+  setThemeForm(settings.theme || DEFAULT_THEME);
   $('#enabled').checked = settings.enabled;
   $('#intervalMinutes').value = settings.intervalMinutes;
   $('#dailyCap').value = settings.dailyCap;
@@ -198,6 +206,7 @@ function collectFormSettings() {
       language: $('#language').value,
       localOnly: $('#localOnly').checked,
       simulateClicks: $('#simulateClicks').checked,
+      theme: currentThemeFromForm(),
       loggingEnabled: $('#loggingEnabled').checked,
       logQueries: $('#logQueries').checked,
       maxLogEntries: Number($('#maxLogEntries').value),
@@ -214,6 +223,7 @@ async function save() {
     settings = await readSettings();
     const { parsed, nextSettings } = collectFormSettings();
     settings = await writeSettings(nextSettings);
+    setThemeForm(settings.theme);
     $('#customWords').value = settings.customWords.join('\n');
     updateWordsCount();
     setDirty(false);
@@ -674,6 +684,41 @@ function bindEvents() {
     void resume();
   });
 
+  $('#themePreset').addEventListener('change', (event) => {
+    const preset = event.target.value;
+    if (preset !== 'custom' && THEME_PRESETS[preset]) {
+      setThemeForm(THEME_PRESETS[preset]);
+    } else {
+      applyThemeFromForm();
+    }
+    setDirty(true);
+  });
+
+  for (const selector of ['#themeBackground', '#themeSurface', '#themeText', '#themeAccent']) {
+    $(selector).addEventListener('input', () => {
+      $('#themePreset').value = 'custom';
+      applyThemeFromForm();
+      setDirty(true);
+    });
+  }
+
+  $('#themeFont').addEventListener('change', () => {
+    $('#themePreset').value = 'custom';
+    applyThemeFromForm();
+    setDirty(true);
+  });
+
+  $('#themeFontSize').addEventListener('input', () => {
+    $('#themePreset').value = 'custom';
+    applyThemeFromForm();
+    setDirty(true);
+  });
+
+  $('#themeReset').addEventListener('click', () => {
+    setThemeForm(DEFAULT_THEME);
+    setDirty(true);
+  });
+
   $('#activeHoursEnabled').addEventListener('change', (event) => {
     $('#hoursRow').hidden = !event.target.checked;
     setDirty(true);
@@ -784,6 +829,67 @@ function renderPresets() {
   }
 }
 
+function populateThemeControls(selectedPreset) {
+  const presetSelect = $('#themePreset');
+  const currentPreset = selectedPreset || presetSelect.value || 'book';
+  presetSelect.replaceChildren();
+  for (const [value, key] of [
+    ['book', 'themeBook'],
+    ['warm', 'themeWarm'],
+    ['paper', 'themePaper'],
+    ['custom', 'themeCustom']
+  ]) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = t(key);
+    presetSelect.append(option);
+  }
+  presetSelect.value = currentPreset;
+
+  const fontSelect = $('#themeFont');
+  const currentFont = fontSelect.value || 'serif';
+  fontSelect.replaceChildren();
+  for (const [value, key] of [
+    ['sans', 'fontSans'],
+    ['serif', 'fontSerif'],
+    ['mono', 'fontMono']
+  ]) {
+    const option = document.createElement('option');
+    option.value = value;
+    option.textContent = t(key);
+    fontSelect.append(option);
+  }
+  fontSelect.value = currentFont;
+}
+
+function currentThemeFromForm() {
+  return sanitizeTheme({
+    preset: $('#themePreset').value,
+    background: $('#themeBackground').value,
+    surface: $('#themeSurface').value,
+    text: $('#themeText').value,
+    accent: $('#themeAccent').value,
+    font: $('#themeFont').value,
+    fontSize: Number($('#themeFontSize').value)
+  });
+}
+
+function setThemeForm(theme) {
+  const clean = sanitizeTheme(theme);
+  $('#themePreset').value = clean.preset;
+  $('#themeBackground').value = clean.background;
+  $('#themeSurface').value = clean.surface;
+  $('#themeText').value = clean.text;
+  $('#themeAccent').value = clean.accent;
+  $('#themeFont').value = clean.font;
+  $('#themeFontSize').value = clean.fontSize;
+  applyTheme(clean);
+}
+
+function applyThemeFromForm() {
+  applyTheme(currentThemeFromForm());
+}
+
 function populateQueryLanguages(selected) {
   const select = $('#language');
   const current = selected || select.value || settings?.language || 'auto';
@@ -838,6 +944,9 @@ async function populateLanguageSelect() {
     applyTranslations(document);
     await populateLanguageSelect();
     populateQueryLanguages($('#language').value || settings?.language || 'auto');
+    const theme = currentThemeFromForm();
+    populateThemeControls($('#themePreset').value);
+    setThemeForm(theme);
     renderPresets();
     updateWordsCount();
     updatePauseButton();
@@ -847,6 +956,7 @@ async function populateLanguageSelect() {
 }
 
 async function init() {
+  applyTheme(DEFAULT_THEME);
   const language = await resolveLanguage();
   await setLanguage(language, false);
   applyTranslations(document, language);
@@ -854,6 +964,7 @@ async function init() {
   $('#customWordsCount').textContent = t('phrasesCount', { count: 0 });
   await populateLanguageSelect();
   populateQueryLanguages('auto');
+  populateThemeControls('book');
   renderPresets();
   renderEngineList();
 

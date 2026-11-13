@@ -8,6 +8,7 @@ import {
   setLanguage,
   t
 } from './src/i18n.js';
+import { DEFAULT_THEME, applyTheme } from './src/theme.js';
 
 const $ = (selector) => document.querySelector(selector);
 
@@ -54,6 +55,7 @@ function render() {
   if (!status?.settings) return;
   const current = status.settings;
   const runtime = status.runtime || {};
+  if (current.theme) applyTheme(current.theme);
   const now = Date.now();
   const paused = current.pausedUntil > now;
   const last = runtime.lastResult;
@@ -220,6 +222,14 @@ function bindEvents() {
 }
 
 async function init() {
+  applyTheme(DEFAULT_THEME);
+  try {
+    const storedSettings = await readSettings();
+    applyTheme(storedSettings.theme || DEFAULT_THEME);
+  } catch {
+    applyTheme(DEFAULT_THEME);
+  }
+
   const language = await resolveLanguage();
   await setLanguage(language, false);
   applyTranslations(document, language);

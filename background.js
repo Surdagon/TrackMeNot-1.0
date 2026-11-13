@@ -551,6 +551,7 @@ async function getStatus() {
       customWordsCount: settings.customWords.length,
       language: settings.language,
       localOnly: settings.localOnly,
+      theme: settings.theme,
       loggingEnabled: settings.loggingEnabled,
       logQueries: settings.logQueries,
       maxLogEntries: settings.maxLogEntries,

@@ -1,5 +1,7 @@
+import { DEFAULT_THEME } from './theme.js';
+
 export const APP_NAME = 'TrackMeNot Privacy';
-export const APP_VERSION = '1.2.2';
+export const APP_VERSION = '1.3.0';
 
 export const ENGINES = [
   {
@@ -99,6 +101,7 @@ export const DEFAULT_SETTINGS = {
   language: 'auto',
   localOnly: false,
   simulateClicks: false,
+  theme: DEFAULT_THEME,
   loggingEnabled: false,
   logQueries: false,
   maxLogEntries: 200,
