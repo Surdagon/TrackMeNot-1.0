@@ -5,14 +5,12 @@ import {
   ENGINES,
   LIMITS,
   LOG_KEY,
-  RUNTIME_KEY,
   SETTINGS_KEY,
   UI_LANGUAGE_KEY
 } from './src/config.js';
 import {
   clearAllData,
   loadState,
-  normalizeRuntime,
   writeLog,
   writeRuntime,
   writeSettings
@@ -49,6 +47,33 @@ function hasState() {
   return Boolean(state.settings && state.runtime);
 }
 
+function reconcileStatsFromLog() {
+  if (!state.settings?.loggingEnabled || !Array.isArray(state.log)) return false;
+
+  const stats = ensureDailyStats(state.runtime, Date.now());
+  let attempts = 0;
+  let success = 0;
+  let errors = 0;
+
+  for (const entry of state.log) {
+    if (!entry?.at || typeof entry.ok !== 'boolean') continue;
+    if (todayKey(new Date(entry.at)) !== stats.date) continue;
+    attempts += 1;
+    if (entry.ok) success += 1;
+    else errors += 1;
+  }
+
+  // Logs can survive a service-worker restart that lost an earlier runtime
+  // write. When they contain more attempts than the counter, the log wins.
+  if (attempts > stats.attempts) {
+    stats.attempts = attempts;
+    stats.success = success;
+    stats.errors = errors;
+    return true;
+  }
+  return false;
+}
+
 async function load() {
   const loaded = await loadState();
   state.settings = sanitizeSettings(loaded.settings);
@@ -56,6 +81,7 @@ async function load() {
   state.log = Array.isArray(loaded.log) ? loaded.log : [];
   state.uiLanguage = loaded.uiLanguage || 'auto';
   ensureDailyStats(state.runtime, Date.now());
+  reconcileStatsFromLog();
   return state;
 }
 
@@ -66,8 +92,17 @@ function resolveQueryLanguage() {
   return normalizeLanguage(preference);
 }
 
-async function persistRuntime() {
-  state.runtime = await writeRuntime(state.runtime);
+let runtimeWriteQueue = Promise.resolve();
+
+function persistRuntime() {
+  // Serialize runtime writes. Concurrent async writes can otherwise finish
+  // out of order and overwrite a newer attempt counter with an older one.
+  runtimeWriteQueue = runtimeWriteQueue
+    .catch(() => {})
+    .then(async () => {
+      await writeRuntime(state.runtime);
+    });
+  return runtimeWriteQueue;
 }
 
 async function updateBadge() {
@@ -490,12 +525,16 @@ async function handleAlarm() {
 async function getStatus() {
   if (!hasState()) await load();
   ensureDailyStats(state.runtime, Date.now());
+  if (reconcileStatsFromLog()) {
+    await persistRuntime();
+  }
 
   const settings = state.settings;
 
   // A popup can open before the install/startup handler has armed the timer.
-  // In that case, arm it now so the first status response is useful.
-  if (settings.enabled && (!state.runtime.nextRunAt || state.runtime.nextRunAt <= 0)) {
+  // In that case, arm it now so the first status response is useful. Never
+  // reschedule while a search is running: that could overwrite newer stats.
+  if (!running && settings.enabled && (!state.runtime.nextRunAt || state.runtime.nextRunAt <= 0)) {
     await scheduleNext('status-boot');
   }
   const runtime = state.runtime;
@@ -632,10 +671,9 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
     }
   }
 
-  if (changes[RUNTIME_KEY]?.newValue && !running) {
-    state.runtime = normalizeRuntime(changes[RUNTIME_KEY].newValue);
-    void updateBadge();
-  }
+  // Do not adopt runtime changes from storage here. This background page is
+  // the sole writer of "runtime"; an older storage event arriving late must
+  // never overwrite a newer in-memory attempt counter.
 
   if (changes[LOG_KEY]) {
     state.log = Array.isArray(changes[LOG_KEY].newValue) ? changes[LOG_KEY].newValue : [];
@@ -646,19 +684,6 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   }
 });
 
-// Keep a useful, privacy-safe log available for the options page.
-void (async () => {
-  try {
-    const alarm = await chrome.alarms.get(ALARM_NAME);
-    if (!alarm) {
-      await load();
-      if (state.settings.enabled) {
-        await scheduleNext('worker-boot');
-      } else {
-        await updateBadge();
-      }
-    }
-  } catch (error) {
-    console.warn('TrackMeNot: boot check failed', error);
-  }
-})();
+// Scheduling is intentionally driven by onInstalled/onStartup and the alarm
+// handler. Do not schedule from top-level worker initialization: an alarm
+// wake-up also runs this module, and the race can overwrite newer statistics.
