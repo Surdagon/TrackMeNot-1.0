@@ -1,0 +1,11 @@
+{
+  "name": "trackmenot-1.0",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TrackMeNot 1.0 — privacy-first Chrome MV3 search-noise extension, rewritten from scratch",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check background.js && node --check options.js && node --check popup.js && node --check src/config.js && node --check src/corpus.js && node --check src/settings.js && node --check src/storage.js && node --check src/query.js && node --check src/scheduler.js && node --check src/util.js"
+  }
+}

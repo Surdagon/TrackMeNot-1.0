@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="appName">TrackMeNot 1.0</title>
+  <link rel="stylesheet" href="options.css">
+  <link rel="icon" type="image/png" href="icons/icon32.png">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <img class="brand__icon" src="icons/icon48.png" alt="">
+        <div>
+          <h1 data-i18n="appName">TrackMeNot 1.0</h1>
+          <p class="brand__subtitle" data-i18n="appTagline">Search noise for a less accurate profile. No cookies, no history reading.</p>
+        </div>
+      </div>
+      <div class="topbar__side">
+        <span class="version">v<span id="version">1.0.0</span></span>
+        <span class="status-pill" id="topStatus" data-i18n="statusLoading">Loading…</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="card card--wide">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="statusTitle">Status</h2>
+            <p class="muted" data-i18n="statusDesc">The scheduler runs in the background via chrome.alarms.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="enabled">
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span class="switch__label" data-i18n="enabled">Enabled</span>
+          </label>
+        </div>
+
+        <div class="status-grid">
+          <div class="stat">
+            <span class="stat__label" data-i18n="nextSearch">Next search</span>
+            <strong class="stat__value" id="nextRunValue">—</strong>
+            <span class="stat__hint" id="nextRunHint">—</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label" data-i18n="today">Today</span>
+            <strong class="stat__value" id="todayValue">0 / 0</strong>
+            <span class="stat__hint" id="todayHint">success: 0 · errors: 0</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label" data-i18n="lastResult">Last result</span>
+            <strong class="stat__value" id="lastResultValue">—</strong>
+            <span class="stat__hint" id="lastResultHint" data-i18n="noRequestsYet">no requests yet</span>
+          </div>
+          <div class="stat">
+            <span class="stat__label" data-i18n="customWordsStat">Custom words</span>
+            <strong class="stat__value" id="customCountValue">0</strong>
+            <span class="stat__hint" data-i18n="customWordsStatHint">phrases in the local list</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="uiLanguage" data-i18n="uiLanguage">Interface language</label>
+          <select id="uiLanguage"></select>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn--primary" id="runNow" type="button" data-i18n="checkNow">Check now</button>
+          <button class="btn" id="pause" type="button" data-i18n="pauseHour">Pause 1 hour</button>
+          <button class="btn btn--ghost" id="resume" type="button" data-i18n="resume">Resume</button>
+        </div>
+        <p class="inline-note" id="statusNote"></p>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="enginesTitle">Search engines</h2>
+            <p class="muted" data-i18n="enginesDesc">Requests go only to selected domains. Cookies are not sent.</p>
+          </div>
+        </div>
+        <div id="engineList" class="engine-list"></div>
+        <p class="inline-note" data-i18n="enginesNote">If an engine shows CAPTCHA or consent, it is temporarily excluded from rotation.</p>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="frequencyTitle">Frequency</h2>
+            <p class="muted" data-i18n="frequencyDesc">Slower is better. Too-frequent requests look like a bot.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="intervalMinutes" data-i18n="intervalLabel">Interval, minutes</label>
+          <div class="field__row">
+            <input id="intervalMinutes" type="number" min="1" max="1440" step="1" inputmode="numeric">
+            <span class="field__suffix" data-i18n="minutesShort">min</span>
+          </div>
+          <div class="preset-row" id="intervalPresets"></div>
+          <p class="field__hint" data-i18n="intervalHint">Default 10 minutes. Minimum 1 minute, maximum 24 hours.</p>
+        </div>
+
+        <div class="field">
+          <label for="dailyCap" data-i18n="dailyCapLabel">Daily attempt limit</label>
+          <input id="dailyCap" type="number" min="0" max="5000" step="1" inputmode="numeric">
+          <p class="field__hint" data-i18n="dailyCapHint">0 — no limit. Default 100 attempts per day.</p>
+        </div>
+
+        <div class="field">
+          <label class="row-check">
+            <input type="checkbox" id="activeHoursEnabled">
+            <span data-i18n="activeHoursLabel">Run only during set hours</span>
+          </label>
+          <div class="hours-row" id="hoursRow">
+            <label for="activeStart" data-i18n="fromLabel">from</label>
+            <input id="activeStart" type="number" min="0" max="23" step="1" inputmode="numeric">
+            <label for="activeEnd" data-i18n="toLabel">to</label>
+            <input id="activeEnd" type="number" min="0" max="23" step="1" inputmode="numeric">
+            <span class="muted" data-i18n="hoursLabel">hours</span>
+          </div>
+        </div>
+
+        <label class="row-check row-check--boxed">
+          <input type="checkbox" id="localOnly">
+          <span>
+            <strong data-i18n="localOnlyTitle">Generate only, do not send</strong>
+            <small data-i18n="localOnlyDesc">Test mode: words are selected on schedule, but no network requests are made.</small>
+          </span>
+        </label>
+      </section>
+
+      <section class="card card--wide">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="wordsTitle">Custom words and phrases</h2>
+            <p class="muted" data-i18n="wordsDesc">One phrase per line. The file is read locally, stored in chrome.storage.local and not synced.</p>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="customWordsEnabled">
+            <span class="switch__track"><span class="switch__thumb"></span></span>
+            <span class="switch__label" data-i18n="useCustom">Use custom words</span>
+          </label>
+        </div>
+
+        <div class="words-grid">
+          <div class="words-editor">
+            <label class="sr-only" for="customWords" data-i18n="wordsTitle">Custom words and phrases</label>
+            <textarea id="customWords" rows="12" spellcheck="false"
+              data-i18n-placeholder="wordsPlaceholder"
+              placeholder="how to choose a laptop for studying&#10;easy homemade bread recipe&#10;things to do in Tbilisi"></textarea>
+            <div class="words-meta">
+              <span id="customWordsCount">0 phrases</span>
+              <span id="customWordsWarning" class="muted"></span>
+            </div>
+          </div>
+
+          <div class="words-side">
+            <div class="field">
+              <label for="customWeight"><span data-i18n="customWeightLabel">Share of custom phrases</span>: <output id="customWeightValue" for="customWeight">50%</output></label>
+              <input id="customWeight" type="range" min="0" max="100" step="5" value="50">
+              <p class="field__hint" data-i18n="customWeightHint">0% — built-in corpus only, 100% — only your phrases.</p>
+            </div>
+
+            <div class="field">
+              <label for="language" data-i18n="corpusLanguage">Built-in corpus language</label>
+              <select id="language">
+                <option value="ru" data-i18n="langRu">Russian</option>
+                <option value="en" data-i18n="langEn">English</option>
+                <option value="mix" data-i18n="langMix">Russian + English</option>
+              </select>
+            </div>
+
+            <div class="import-box" id="dropZone">
+              <input type="file" id="fileInput" accept=".txt,text/plain" hidden>
+              <div class="import-box__title" data-i18n="importTitle">Load .txt</div>
+              <p data-i18n="importDesc">Drag a file here or choose one manually. UTF-8.</p>
+              <div class="import-box__actions">
+                <button class="btn btn--small" id="importBtn" type="button" data-i18n="chooseFile">Choose file</button>
+                <select id="importMode" class="select--small">
+                  <option value="replace" data-i18n="replace">Replace</option>
+                  <option value="append" data-i18n="append">Append</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="actions actions--tight">
+              <button class="btn btn--small" id="downloadWords" type="button" data-i18n="downloadTxt">Download .txt</button>
+              <button class="btn btn--small btn--danger-ghost" id="clearWords" type="button" data-i18n="clear">Clear</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="loggingTitle">Logs</h2>
+            <p class="muted" data-i18n="loggingDesc">By default only metadata is logged: engine, status, time.</p>
+          </div>
+        </div>
+
+        <label class="row-check">
+          <input type="checkbox" id="loggingEnabled">
+          <span data-i18n="loggingEnabled">Keep a local log</span>
+        </label>
+
+        <label class="row-check row-check--boxed">
+          <input type="checkbox" id="logQueries">
+          <span>
+            <strong data-i18n="logQueriesTitle">Log query text</strong>
+            <small data-i18n="logQueriesDesc">May reveal your phrases if someone gets access to the browser profile.</small>
+          </span>
+        </label>
+
+        <div class="field">
+          <label for="maxLogEntries" data-i18n="maxLogEntries">Entries to keep</label>
+          <input id="maxLogEntries" type="number" min="10" max="1000" step="10" inputmode="numeric">
+        </div>
+
+        <div class="actions actions--tight">
+          <button class="btn btn--small" id="showLog" type="button" data-i18n="showLog">Show</button>
+          <button class="btn btn--small" id="downloadLog" type="button" data-i18n="downloadLog">Download .txt</button>
+          <button class="btn btn--small btn--danger-ghost" id="clearLog" type="button" data-i18n="clear">Clear</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card__header">
+          <div>
+            <h2 data-i18n="privacyTitle">Privacy</h2>
+            <p class="muted" data-i18n="privacyDesc">What the extension does — and what it does not do.</p>
+          </div>
+        </div>
+
+        <ul class="privacy-list">
+          <li data-i18n="privacyCookies">No cookies. Requests use credentials: omit; the extension does not read or send cookies.</li>
+          <li data-i18n="privacyContent">No content scripts. It does not inject into pages or read what you browse.</li>
+          <li data-i18n="privacyPermissions">No history or tabs. It does not need tabs, history, or webNavigation permissions.</li>
+          <li data-i18n="privacySync">No sync. Settings and words live in storage.local, not in the cloud.</li>
+          <li data-i18n="privacyIp">But: requests still go from your IP to the selected search engine. This is not anonymity; use VPN/Tor and a separate profile.</li>
+        </ul>
+
+        <label class="row-check">
+          <input type="checkbox" id="showBadge">
+          <span data-i18n="showBadge">Show status on icon</span>
+        </label>
+
+        <div class="danger-zone">
+          <div>
+            <strong data-i18n="dangerTitle">Erase all data</strong>
+            <p class="muted" data-i18n="dangerDesc">Settings, custom words, logs and statistics will be deleted from this profile.</p>
+          </div>
+          <button class="btn btn--danger" id="resetAll" type="button" data-i18n="erase">Erase</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <span class="muted" data-i18n="footer">TrackMeNot 1.0 · MIT · not affiliated with search engines</span>
+      </div>
+      <div class="footer__actions">
+        <span class="save-state" id="saveState" data-i18n="unsaved">Unsaved changes</span>
+        <button class="btn btn--primary" id="save" type="button" data-i18n="save">Save settings</button>
+      </div>
+    </footer>
+  </div>
+
+  <dialog id="logDialog" class="dialog">
+    <div class="dialog__header">
+      <h2 data-i18n="logDialogTitle">Local log</h2>
+      <div class="dialog__actions">
+        <button class="btn btn--small" id="dialogDownloadLog" type="button" data-i18n="downloadLog">Download .txt</button>
+        <button class="btn btn--small btn--ghost" id="dialogCloseLog" type="button" data-i18n="close">Close</button>
+      </div>
+    </div>
+    <div id="logTable" class="log-table"></div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

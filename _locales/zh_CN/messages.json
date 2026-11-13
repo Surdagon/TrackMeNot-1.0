@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "TrackMeNot 1.0" },
+  "extShortName": { "message": "TMN 1.0" },
+  "extDescription": { "message": "适用于 Chrome MV3 的搜索噪声扩展。不使用 Cookie、不注入内容脚本、不读取浏览历史。支持自定义 .txt 列表和 10 种界面语言。" },
+  "actionTitle": { "message": "TrackMeNot 1.0" }
+}

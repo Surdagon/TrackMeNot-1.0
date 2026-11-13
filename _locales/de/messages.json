@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "TrackMeNot 1.0" },
+  "extShortName": { "message": "TMN 1.0" },
+  "extDescription": { "message": "Suchrauschen-Erweiterung für Chrome MV3. Keine Cookies, keine Content Scripts und kein Lesen des Verlaufs. Eigene .txt-Listen und 10 Oberflächensprachen." },
+  "actionTitle": { "message": "TrackMeNot 1.0" }
+}

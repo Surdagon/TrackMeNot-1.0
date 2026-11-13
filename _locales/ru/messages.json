@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "TrackMeNot 1.0" },
+  "extShortName": { "message": "TMN 1.0" },
+  "extDescription": { "message": "Шумовые поисковые запросы для защиты от профилирования. Chrome MV3, без cookies, без content scripts и чтения истории. Свои слова в .txt и 10 языков интерфейса." },
+  "actionTitle": { "message": "TrackMeNot 1.0" }
+}

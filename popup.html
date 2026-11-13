@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="appName">TrackMeNot 1.0</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+    <header class="popup__header">
+      <img src="icons/icon32.png" alt="" class="popup__icon">
+      <div class="popup__brand">
+        <h1 data-i18n="appName">TrackMeNot 1.0</h1>
+        <span class="popup__status" id="topStatus" data-i18n="popupLoading">Loading…</span>
+      </div>
+      <label class="switch" data-i18n-title="enabled">
+        <input type="checkbox" id="enabled">
+        <span class="switch__track"><span class="switch__thumb"></span></span>
+      </label>
+    </header>
+
+    <section class="popup__stats">
+      <div class="popup__stat">
+        <span class="popup__label" data-i18n="popupNext">Next</span>
+        <strong id="nextRun">—</strong>
+        <small id="nextHint"></small>
+      </div>
+      <div class="popup__stat">
+        <span class="popup__label" data-i18n="popupToday">Today</span>
+        <strong id="today">0 / 0</strong>
+        <small id="todayHint">success: 0 · errors: 0</small>
+      </div>
+    </section>
+
+    <section class="popup__last">
+      <span class="popup__label" data-i18n="popupLast">Last result</span>
+      <strong id="lastResult">—</strong>
+      <small id="lastHint" data-i18n="noRequestsYet">no requests yet</small>
+    </section>
+
+    <div class="popup__actions">
+      <button class="btn btn--primary" id="runNow" type="button" data-i18n="checkNow">Check now</button>
+      <button class="btn" id="pause" type="button" data-i18n="pauseHour">Pause 1 hour</button>
+    </div>
+
+    <p class="popup__note" id="popupNote"></p>
+
+    <footer class="popup__footer">
+      <span id="engineInfo">—</span>
+      <button class="link-button" id="openOptions" type="button" data-i18n="popupSettings">Settings</button>
+    </footer>
+
+    <div class="popup__privacy">
+      <span data-i18n="popupCookies">No cookies</span>
+      <span>·</span>
+      <span id="customCount">0 custom phrases</span>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

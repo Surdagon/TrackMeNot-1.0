@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "TrackMeNot 1.0" },
+  "extShortName": { "message": "TMN 1.0" },
+  "extDescription": { "message": "Extensión de ruido de búsqueda para Chrome MV3. Sin cookies, sin content scripts y sin leer el historial. Listas .txt propias y 10 idiomas de interfaz." },
+  "actionTitle": { "message": "TrackMeNot 1.0" }
+}

@@ -1,0 +1,6 @@
+{
+  "extName": { "message": "TrackMeNot 1.0" },
+  "extShortName": { "message": "TMN 1.0" },
+  "extDescription": { "message": "Chrome MV3 向けの検索ノイズ拡張機能。Cookie、Content Script、履歴の読み取りはありません。独自の .txt リストと 10 言語のインターフェースに対応。" },
+  "actionTitle": { "message": "TrackMeNot 1.0" }
+}
