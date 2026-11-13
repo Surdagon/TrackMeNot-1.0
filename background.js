@@ -48,7 +48,7 @@ function hasState() {
 }
 
 function reconcileStatsFromLog() {
-  if (!state.settings?.loggingEnabled || !Array.isArray(state.log)) return false;
+  if (!Array.isArray(state.log)) return false;
 
   const stats = ensureDailyStats(state.runtime, Date.now());
   let attempts = 0;
