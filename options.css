@@ -1,22 +1,22 @@
 :root {
   color-scheme: dark;
-  --bg: #0b1220;
-  --bg-2: #0f172a;
-  --surface: #121c2f;
-  --surface-2: #17243a;
-  --surface-3: #1e2d47;
-  --text: #e6edf7;
-  --muted: #93a4bd;
-  --faint: #6b7c96;
-  --border: #263650;
-  --border-strong: #365074;
-  --accent: #38bdf8;
-  --accent-strong: #0ea5e9;
-  --accent-ink: #062033;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --danger: #f87171;
-  --danger-strong: #ef4444;
+  --bg: #17110e;
+  --bg-2: #1e1611;
+  --surface: #241a14;
+  --surface-2: #2d2018;
+  --surface-3: #3a2a1f;
+  --text: #f3e7d7;
+  --muted: #c9b39a;
+  --faint: #a78a70;
+  --border: #4a3527;
+  --border-strong: #6b4a32;
+  --accent: #e8a45c;
+  --accent-strong: #d97a2b;
+  --accent-ink: #2a1607;
+  --success: #a7c97a;
+  --warning: #f0c36a;
+  --danger: #e58a7a;
+  --danger-strong: #d66a5a;
   --radius: 16px;
   --radius-sm: 10px;
   --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
@@ -36,8 +36,8 @@ body {
 body {
   margin: 0;
   background:
-    radial-gradient(1000px 600px at 10% -10%, rgba(56, 189, 248, 0.14), transparent 60%),
-    radial-gradient(800px 500px at 100% 0%, rgba(52, 211, 153, 0.09), transparent 55%),
+    radial-gradient(1000px 600px at 10% -10%, rgba(232, 164, 92, 0.14), transparent 60%),
+    radial-gradient(800px 500px at 100% 0%, rgba(190, 110, 55, 0.09), transparent 55%),
     var(--bg);
   color: var(--text);
   font-family: var(--font);
@@ -60,7 +60,7 @@ code {
   padding: 1px 5px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: rgba(148, 163, 184, 0.08);
+  background: rgba(201, 179, 155, 0.08);
   font-family: var(--mono);
   font-size: 0.86em;
 }
@@ -90,7 +90,7 @@ code {
   width: 48px;
   height: 48px;
   border-radius: 13px;
-  box-shadow: 0 8px 28px rgba(14, 165, 233, 0.25);
+  box-shadow: 0 8px 28px rgba(217, 122, 43, 0.25);
 }
 
 .brand h1 {
@@ -142,13 +142,13 @@ code {
 
 .status-pill.is-on {
   color: var(--success);
-  border-color: rgba(52, 211, 153, 0.35);
-  background: rgba(52, 211, 153, 0.08);
+  border-color: rgba(167, 201, 122, 0.35);
+  background: rgba(167, 201, 122, 0.08);
 }
 
 .status-pill.is-on::before {
   background: var(--success);
-  box-shadow: 0 0 12px rgba(52, 211, 153, 0.7);
+  box-shadow: 0 0 12px rgba(167, 201, 122, 0.7);
 }
 
 .status-pill.is-off {
@@ -157,8 +157,8 @@ code {
 
 .status-pill.is-paused {
   color: var(--warning);
-  border-color: rgba(251, 191, 36, 0.35);
-  background: rgba(251, 191, 36, 0.08);
+  border-color: rgba(240, 195, 106, 0.35);
+  background: rgba(240, 195, 106, 0.08);
 }
 
 .status-pill.is-paused::before {
@@ -167,8 +167,8 @@ code {
 
 .status-pill.is-error {
   color: var(--danger);
-  border-color: rgba(248, 113, 113, 0.35);
-  background: rgba(248, 113, 113, 0.08);
+  border-color: rgba(229, 138, 122, 0.35);
+  background: rgba(229, 138, 122, 0.08);
 }
 
 .status-pill.is-error::before {
@@ -305,12 +305,12 @@ textarea:focus-visible {
 
 .btn--primary {
   border-color: transparent;
-  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  background: linear-gradient(135deg, #e8a45c, #d97a2b);
   color: var(--accent-ink);
 }
 
 .btn--primary:hover {
-  background: linear-gradient(135deg, #7dd3fc, #38bdf8);
+  background: linear-gradient(135deg, #f2bd86, #e8a45c);
   border-color: transparent;
 }
 
@@ -325,13 +325,13 @@ textarea:focus-visible {
 }
 
 .btn--danger {
-  border-color: rgba(248, 113, 113, 0.45);
-  background: rgba(248, 113, 113, 0.14);
-  color: #fecaca;
+  border-color: rgba(229, 138, 122, 0.45);
+  background: rgba(229, 138, 122, 0.14);
+  color: #f3c6bc;
 }
 
 .btn--danger:hover {
-  background: rgba(248, 113, 113, 0.24);
+  background: rgba(229, 138, 122, 0.24);
   border-color: var(--danger);
 }
 
@@ -342,8 +342,8 @@ textarea:focus-visible {
 }
 
 .btn--danger-ghost:hover {
-  background: rgba(248, 113, 113, 0.1);
-  border-color: rgba(248, 113, 113, 0.3);
+  background: rgba(229, 138, 122, 0.1);
+  border-color: rgba(229, 138, 122, 0.3);
 }
 
 .btn:disabled {
@@ -385,13 +385,13 @@ textarea:focus-visible {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  background: #cbd5e1;
+  background: #f0d7b8;
   transition: transform 160ms ease, background 160ms ease;
 }
 
 .switch input:checked + .switch__track {
-  border-color: rgba(56, 189, 248, 0.6);
-  background: rgba(56, 189, 248, 0.28);
+  border-color: rgba(232, 164, 92, 0.6);
+  background: rgba(232, 164, 92, 0.28);
 }
 
 .switch input:checked + .switch__track .switch__thumb {
@@ -480,17 +480,17 @@ textarea:focus-visible {
 
 .health-badge.is-ok {
   color: var(--success);
-  border-color: rgba(52, 211, 153, 0.3);
+  border-color: rgba(167, 201, 122, 0.3);
 }
 
 .health-badge.is-blocked {
   color: var(--warning);
-  border-color: rgba(251, 191, 36, 0.35);
+  border-color: rgba(240, 195, 106, 0.35);
 }
 
 .health-badge.is-error {
   color: var(--danger);
-  border-color: rgba(248, 113, 113, 0.35);
+  border-color: rgba(229, 138, 122, 0.35);
 }
 
 .field {
@@ -662,14 +662,14 @@ input[type="range"] {
   padding: 14px;
   border: 1px dashed var(--border-strong);
   border-radius: var(--radius-sm);
-  background: rgba(56, 189, 248, 0.04);
+  background: rgba(232, 164, 92, 0.04);
   text-align: center;
   transition: border-color 120ms ease, background 120ms ease;
 }
 
 .import-box.is-dragover {
   border-color: var(--accent);
-  background: rgba(56, 189, 248, 0.1);
+  background: rgba(232, 164, 92, 0.1);
 }
 
 .import-box__title {
@@ -719,9 +719,9 @@ input[type="range"] {
   gap: 16px;
   margin-top: 18px;
   padding: 14px;
-  border: 1px solid rgba(248, 113, 113, 0.25);
+  border: 1px solid rgba(229, 138, 122, 0.25);
   border-radius: var(--radius-sm);
-  background: rgba(248, 113, 113, 0.06);
+  background: rgba(229, 138, 122, 0.06);
 }
 
 .danger-zone strong {
@@ -776,7 +776,7 @@ input[type="range"] {
 }
 
 .dialog::backdrop {
-  background: rgba(3, 7, 18, 0.72);
+  background: rgba(24, 12, 6, 0.72);
   backdrop-filter: blur(3px);
 }
 
@@ -878,11 +878,11 @@ input[type="range"] {
 }
 
 .toast.is-error {
-  border-color: rgba(248, 113, 113, 0.5);
+  border-color: rgba(229, 138, 122, 0.5);
 }
 
 .toast.is-success {
-  border-color: rgba(52, 211, 153, 0.5);
+  border-color: rgba(167, 201, 122, 0.5);
 }
 
 .sr-only {
