@@ -41,7 +41,7 @@ export default {
   corpusLanguage: 'Sprache des eingebauten Korpus',
   langRu: 'Russisch',
   langEn: 'Englisch',
-  langMix: 'Russisch + Englisch',
+  langMix: 'Alle Sprachen',
   importTitle: '.txt laden',
   importDesc: 'Datei hierher ziehen oder manuell auswählen. UTF-8.',
   chooseFile: 'Datei wählen',

@@ -41,7 +41,7 @@ export default {
   corpusLanguage: 'Язык встроенного корпуса',
   langRu: 'Русский',
   langEn: 'English',
-  langMix: 'Русский + English',
+  langMix: 'Все языки',
   importTitle: 'Загрузить .txt',
   importDesc: 'Перетащите файл сюда или выберите вручную. Кодировка — UTF-8.',
   chooseFile: 'Выбрать файл',

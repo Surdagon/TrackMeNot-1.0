@@ -147,7 +147,7 @@ function fillForm(nextSettings) {
   $('#customWordsEnabled').checked = settings.customWordsEnabled;
   $('#customWeight').value = settings.customWeight;
   $('#customWeightValue').textContent = `${settings.customWeight}%`;
-  $('#language').value = settings.language;
+  populateQueryLanguages(settings.language);
   $('#localOnly').checked = settings.localOnly;
   $('#loggingEnabled').checked = settings.loggingEnabled;
   $('#logQueries').checked = settings.logQueries;
@@ -782,6 +782,32 @@ function renderPresets() {
   }
 }
 
+function populateQueryLanguages(selected) {
+  const select = $('#language');
+  const current = selected || select.value || settings?.language || 'auto';
+  select.replaceChildren();
+
+  const auto = document.createElement('option');
+  auto.value = 'auto';
+  auto.textContent = t('autoLanguage');
+  select.append(auto);
+
+  for (const language of LANGUAGES) {
+    const option = document.createElement('option');
+    option.value = language.code;
+    option.textContent = language.label;
+    select.append(option);
+  }
+
+  const mix = document.createElement('option');
+  mix.value = 'mix';
+  mix.textContent = t('langMix');
+  select.append(mix);
+
+  const allowed = new Set(['auto', 'mix', ...LANGUAGES.map((language) => language.code)]);
+  select.value = allowed.has(current) ? current : 'auto';
+}
+
 async function populateLanguageSelect() {
   const select = $('#uiLanguage');
   select.replaceChildren();
@@ -809,6 +835,7 @@ async function populateLanguageSelect() {
     await setLanguage(select.value);
     applyTranslations(document);
     await populateLanguageSelect();
+    populateQueryLanguages($('#language').value || settings?.language || 'auto');
     renderPresets();
     updateWordsCount();
     updatePauseButton();
@@ -824,6 +851,7 @@ async function init() {
   $('#todayHint').textContent = t('todayHint', { success: 0, errors: 0 });
   $('#customWordsCount').textContent = t('phrasesCount', { count: 0 });
   await populateLanguageSelect();
+  populateQueryLanguages('auto');
   renderPresets();
   renderEngineList();
 

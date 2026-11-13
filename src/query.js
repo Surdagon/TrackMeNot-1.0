@@ -39,7 +39,7 @@ export function nextEngineAvailableAt(settings, runtime, now = Date.now()) {
   return Math.min(...blockedUntil);
 }
 
-export function selectQuery(settings, recentQueries = [], random = Math.random) {
+export function selectQuery(settings, recentQueries = [], random = Math.random, languageOverride = null) {
   const customWords = settings.customWordsEnabled && Array.isArray(settings.customWords)
     ? settings.customWords
     : [];
@@ -48,10 +48,15 @@ export function selectQuery(settings, recentQueries = [], random = Math.random) 
   let pool;
   if (useCustom) {
     pool = customWords;
-  } else if (settings.language === 'mix') {
-    pool = [...CORPUS.ru, ...CORPUS.en];
   } else {
-    pool = CORPUS[settings.language] || CORPUS.ru;
+    const requested = settings.language === 'auto'
+      ? (languageOverride || 'en')
+      : settings.language;
+    if (requested === 'mix') {
+      pool = Object.values(CORPUS).flat();
+    } else {
+      pool = CORPUS[requested] || CORPUS.en;
+    }
   }
 
   if (!Array.isArray(pool) || pool.length === 0) return null;

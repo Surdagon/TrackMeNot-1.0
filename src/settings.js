@@ -1,8 +1,8 @@
 import {
   DEFAULT_SETTINGS,
   ENGINES,
-  LANGUAGES,
   LIMITS,
+  QUERY_LANGUAGE_CODES,
   SETTINGS_VERSION
 } from './config.js';
 import {
@@ -84,7 +84,12 @@ export function sanitizeSettings(input) {
   );
   settings.customWords = parsed.words.map((word) => normalizeQuery(word)).filter(Boolean);
 
-  settings.language = LANGUAGES.some((language) => language.id === settings.language)
+  const allowedLanguages = new Set([
+    'auto',
+    'mix',
+    ...QUERY_LANGUAGE_CODES
+  ]);
+  settings.language = allowedLanguages.has(settings.language)
     ? settings.language
     : DEFAULT_SETTINGS.language;
 

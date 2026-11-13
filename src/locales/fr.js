@@ -41,7 +41,7 @@ export default {
   corpusLanguage: 'Langue du corpus intégré',
   langRu: 'Russe',
   langEn: 'Anglais',
-  langMix: 'Russe + anglais',
+  langMix: 'Toutes les langues',
   importTitle: 'Charger un .txt',
   importDesc: 'Glissez un fichier ici ou choisissez-le manuellement. UTF-8.',
   chooseFile: 'Choisir un fichier',

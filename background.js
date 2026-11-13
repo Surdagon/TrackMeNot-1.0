@@ -6,7 +6,8 @@ import {
   LIMITS,
   LOG_KEY,
   RUNTIME_KEY,
-  SETTINGS_KEY
+  SETTINGS_KEY,
+  UI_LANGUAGE_KEY
 } from './src/config.js';
 import {
   clearAllData,
@@ -33,11 +34,13 @@ import {
   formatDateTime,
   todayKey
 } from './src/util.js';
+import { normalizeLanguage } from './src/i18n.js';
 
 const state = {
   settings: null,
   runtime: null,
-  log: []
+  log: [],
+  uiLanguage: 'auto'
 };
 
 let running = false;
@@ -51,8 +54,16 @@ async function load() {
   state.settings = sanitizeSettings(loaded.settings);
   state.runtime = loaded.runtime;
   state.log = Array.isArray(loaded.log) ? loaded.log : [];
+  state.uiLanguage = loaded.uiLanguage || 'auto';
   ensureDailyStats(state.runtime, Date.now());
   return state;
+}
+
+function resolveQueryLanguage() {
+  const preference = state.uiLanguage && state.uiLanguage !== 'auto'
+    ? state.uiLanguage
+    : (chrome.i18n?.getUILanguage?.() || 'en');
+  return normalizeLanguage(preference);
 }
 
 async function persistRuntime() {
@@ -197,7 +208,7 @@ async function performSearch(trigger = 'alarm', options = {}) {
     return { ok: false, skipped: true, reason };
   }
 
-  const query = selectQuery(settings, runtime.recentQueries);
+  const query = selectQuery(settings, runtime.recentQueries, Math.random, resolveQueryLanguage());
   if (!query) {
     return { ok: false, skipped: true, reason: 'no-query' };
   }
@@ -408,6 +419,7 @@ async function resetAll() {
   state.settings = settings;
   state.runtime = runtime;
   state.log = [];
+  state.uiLanguage = 'auto';
   await writeSettings(settings);
   await writeRuntime(runtime);
   await writeLog([]);
@@ -504,6 +516,10 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
 
   if (changes[LOG_KEY]) {
     state.log = Array.isArray(changes[LOG_KEY].newValue) ? changes[LOG_KEY].newValue : [];
+  }
+
+  if (changes[UI_LANGUAGE_KEY]) {
+    state.uiLanguage = changes[UI_LANGUAGE_KEY].newValue || 'auto';
   }
 });
 

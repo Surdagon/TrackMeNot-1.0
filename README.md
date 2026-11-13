@@ -28,10 +28,10 @@ The original Chrome port (`TrackMeNot-Chrome-master`, version 0.10.3) is a Manif
 | Hidden tabs | Tab mode opens an inactive tab | No tabs, no hidden windows |
 | Click simulation | Clicks search results/ads | No clicks at all; no click fraud |
 | Frequency | 10 queries per minute by default | 10 minutes by default; daily cap, active hours, backoff |
-| Query sources | Stale 2010 zeitgeist, RSS, DHS watchlist | Local neutral corpus + your own `.txt` list |
+| Query sources | Stale 2010 zeitgeist, RSS, DHS watchlist | 10 local language corpora + your own `.txt` list |
 | Logs | On by default, raw queries | Off by default; metadata only; query text is opt-in |
-| Languages | English/Russian UI fragments | 10 interface languages |
-| Tests | None | 19 unit tests |
+| Languages | English/Russian UI fragments | 10 interface languages and 10 query corpora |
+| Tests | None | 23 unit tests |
 
 ### Install
 
@@ -42,6 +42,10 @@ The original Chrome port (`TrackMeNot-Chrome-master`, version 0.10.3) is a Manif
 5. Open the extension options, choose search engines, and click **Save settings**.
 
 Requires Chrome 120+.
+
+### Built-in corpus
+
+Every interface language has its own local corpus of neutral search phrases: English, Russian, Spanish, Portuguese (Brazil), French, German, Italian, Japanese, Korean and Simplified Chinese. By default the corpus language is **Auto**: it follows the interface/browser language. In options you can force a specific corpus language or choose **All languages** to mix all ten.
 
 ### Your own words in a `.txt` file
 
@@ -71,7 +75,7 @@ npm test
 npm run check
 ```
 
-The tests cover URL building, query selection, `.txt` parsing, scheduling, limits, settings and all 10 language dictionaries. The extension was also loaded as an unpacked Chromium extension for UI checks.
+The tests cover URL building, query selection, all 10 corpora, `.txt` parsing, scheduling, limits, settings and all 10 language dictionaries. The extension was also loaded as an unpacked Chromium extension for UI checks.
 
 ### License and credits
 
@@ -91,9 +95,10 @@ MIT. The idea comes from [TrackMeNot](https://github.com/vtoubiana/TrackMeNot) b
 - нет `tabs`, `history`, `webNavigation` и `cookies`;
 - нет скрытых вкладок и кликов по выдаче/рекламе;
 - частота по умолчанию — 10 минут, есть дневной лимит, активные часы и backoff;
-- запросы берутся из локального нейтрального корпуса или вашего `.txt`;
+- 10 локальных корпусов запросов (по одному на язык) или ваш `.txt`;
+- язык корпуса по умолчанию следует языку интерфейса/браузера;
 - логи по умолчанию выключены, текст запросов — только по желанию;
-- 10 языков интерфейса и 19 тестов.
+- 10 языков интерфейса и 23 теста.
 
 **Установка:** `chrome://extensions/` → Developer mode → Load unpacked → папка `TrackMeNot-1.0`.
 
@@ -119,7 +124,7 @@ MIT. The idea comes from [TrackMeNot](https://github.com/vtoubiana/TrackMeNot) b
 - 10 minutos por defecto, límite diario, horas activas y backoff;
 - corpus local neutro o tu propia lista `.txt`;
 - registros desactivados por defecto; el texto de las consultas es opcional;
-- 10 idiomas de interfaz y 19 pruebas.
+- 10 idiomas de interfaz y 23 pruebas.
 
 **Instalación:** `chrome://extensions/` → modo desarrollador → Load unpacked → carpeta `TrackMeNot-1.0`.
 
@@ -145,7 +150,7 @@ Más detalles en la [sección en inglés](#english) y [`PRIVACY.md`](PRIVACY.md)
 - 10 minutos por padrão, limite diário, horário ativo e backoff;
 - corpus local neutro ou sua própria lista `.txt`;
 - logs desativados por padrão; texto das consultas é opcional;
-- 10 idiomas de interface e 19 testes.
+- 10 idiomas de interface e 23 testes.
 
 **Instalação:** `chrome://extensions/` → modo desenvolvedor → Load unpacked → pasta `TrackMeNot-1.0`.
 
@@ -171,7 +176,7 @@ Mais detalhes na [seção em inglês](#english) e em [`PRIVACY.md`](PRIVACY.md).
 - 10 minutes par défaut, limite quotidienne, heures actives et backoff ;
 - corpus local neutre ou votre propre liste `.txt` ;
 - journaux désactivés par défaut ; le texte des requêtes est optionnel ;
-- 10 langues d'interface et 19 tests.
+- 10 langues d'interface et 23 tests.
 
 **Installation :** `chrome://extensions/` → mode développeur → Load unpacked → dossier `TrackMeNot-1.0`.
 
@@ -197,7 +202,7 @@ Plus de détails dans la [section anglaise](#english) et [`PRIVACY.md`](PRIVACY.
 - standardmäßig 10 Minuten, Tageslimit, aktive Stunden und Backoff;
 - lokaler neutraler Korpus oder eigene `.txt`-Liste;
 - Protokolle standardmäßig aus; Abfragetext optional;
-- 10 Oberflächensprachen und 19 Tests.
+- 10 Oberflächensprachen und 23 Tests.
 
 **Installation:** `chrome://extensions/` → Entwicklermodus → Load unpacked → Ordner `TrackMeNot-1.0`.
 
@@ -223,7 +228,7 @@ Mehr Details im [englischen Abschnitt](#english) und in [`PRIVACY.md`](PRIVACY.m
 - 10 minuti predefiniti, limite giornaliero, ore attive e backoff;
 - corpus locale neutro o la tua lista `.txt`;
 - log disattivati per impostazione predefinita; testo delle query opzionale;
-- 10 lingue dell'interfaccia e 19 test.
+- 10 lingue dell'interfaccia e 23 test.
 
 **Installazione:** `chrome://extensions/` → modalità sviluppatore → Load unpacked → cartella `TrackMeNot-1.0`.
 
@@ -249,7 +254,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 既定 10 分間隔、1 日の上限、アクティブ時間、バックオフを備えています。
 - ローカルの中立コーパスまたは自分の `.txt` リストを使えます。
 - ログは既定でオフ、クエリ本文の記録は任意です。
-- 10 言語の UI と 19 のテスト。
+- 10 言語の UI と 23 のテスト。
 
 **インストール:** `chrome://extensions/` → デベロッパーモード → Load unpacked → `TrackMeNot-1.0` フォルダー。
 
@@ -275,7 +280,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 기본 10분 간격, 일일 한도, 활성 시간, 백오프를 지원합니다.
 - 로컬 중립 코퍼스 또는 내 `.txt` 목록을 사용할 수 있습니다.
 - 로그는 기본적으로 꺼져 있고, 검색어 텍스트 기록은 선택 사항입니다.
-- 10개 UI 언어와 19개 테스트.
+- 10개 UI 언어와 23개 테스트.
 
 **설치:** `chrome://extensions/` → 개발자 모드 → Load unpacked → `TrackMeNot-1.0` 폴더.
 
@@ -301,7 +306,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 默认 10 分钟一次，支持每日上限、活动时间和退避；
 - 使用本地中性语料或你自己的 `.txt` 列表；
 - 日志默认关闭，查询文本记录可选；
-- 10 种界面语言和 19 项测试。
+- 10 种界面语言和 23 项测试。
 
 **安装：** `chrome://extensions/` → 开发者模式 → Load unpacked → 选择 `TrackMeNot-1.0` 文件夹。
 

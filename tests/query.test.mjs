@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { buildSearchUrl, selectEngine, selectQuery } from '../src/query.js';
+import { CORPUS } from '../src/corpus.js';
 import { parseCustomWords, serializeCustomWords } from '../src/util.js';
 import { DEFAULT_SETTINGS } from '../src/config.js';
 import { sanitizeSettings } from '../src/settings.js';
@@ -40,6 +41,31 @@ test('selectQuery falls back to the built-in corpus at zero custom weight', () =
   }), [], () => 0);
   assert.ok(query);
   assert.notEqual(query, 'моя фраза');
+});
+
+test('every supported language has a usable corpus', () => {
+  for (const [language, words] of Object.entries(CORPUS)) {
+    assert.ok(Array.isArray(words), language);
+    assert.ok(words.length >= 40, `${language}: ${words.length}`);
+    assert.ok(words.every((word) => typeof word === 'string' && word.trim().length > 0), language);
+  }
+});
+
+test('selectQuery auto follows the language override', () => {
+  const query = selectQuery(settings({
+    language: 'auto',
+    customWordsEnabled: false
+  }), [], () => 0, 'es');
+  assert.ok(CORPUS.es.includes(query), query);
+});
+
+test('selectQuery mix can use any corpus', () => {
+  const all = new Set(Object.values(CORPUS).flat());
+  const query = selectQuery(settings({
+    language: 'mix',
+    customWordsEnabled: false
+  }), [], () => 0.5);
+  assert.ok(all.has(query), query);
 });
 
 test('selectQuery skips recently used queries', () => {

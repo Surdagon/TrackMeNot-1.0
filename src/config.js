@@ -96,7 +96,7 @@ export const DEFAULT_SETTINGS = {
   customWordsEnabled: true,
   customWeight: 50,
   customWords: [],
-  language: 'ru',
+  language: 'auto',
   localOnly: false,
   loggingEnabled: false,
   logQueries: false,
@@ -120,10 +120,17 @@ export const DEFAULT_RUNTIME = {
   lastScheduleReason: ''
 };
 
-export const LANGUAGES = [
-  { id: 'ru', label: 'Русский' },
-  { id: 'en', label: 'English' },
-  { id: 'mix', label: 'Русский + English' }
+export const QUERY_LANGUAGE_CODES = [
+  'en',
+  'ru',
+  'es',
+  'pt-BR',
+  'fr',
+  'de',
+  'it',
+  'ja',
+  'ko',
+  'zh-CN'
 ];
 
 export const INTERVAL_PRESETS = [5, 10, 15, 30, 60, 180];

@@ -41,7 +41,7 @@ export default {
   corpusLanguage: '내장 코퍼스 언어',
   langRu: '러시아어',
   langEn: '영어',
-  langMix: '러시아어 + 영어',
+  langMix: '모든 언어',
   importTitle: '.txt 불러오기',
   importDesc: '파일을 여기로 끌어오거나 직접 선택하세요. UTF-8.',
   chooseFile: '파일 선택',

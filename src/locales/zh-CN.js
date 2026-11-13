@@ -41,7 +41,7 @@ export default {
   corpusLanguage: '内置语料语言',
   langRu: '俄语',
   langEn: '英语',
-  langMix: '俄语 + 英语',
+  langMix: '所有语言',
   importTitle: '加载 .txt',
   importDesc: '将文件拖到此处或手动选择。UTF-8 编码。',
   chooseFile: '选择文件',

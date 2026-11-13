@@ -2,7 +2,8 @@ import {
   DEFAULT_RUNTIME,
   LOG_KEY,
   RUNTIME_KEY,
-  SETTINGS_KEY
+  SETTINGS_KEY,
+  UI_LANGUAGE_KEY
 } from './config.js';
 import { mergeSettings, sanitizeSettings } from './settings.js';
 import { clone } from './util.js';
@@ -74,10 +75,16 @@ export async function clearAllData() {
 }
 
 export async function loadState() {
-  const [settings, runtime, log] = await Promise.all([
+  const [settings, runtime, log, uiLanguage] = await Promise.all([
     readSettings(),
     readRuntime(),
-    readLog()
+    readLog(),
+    chrome.storage.local.get(UI_LANGUAGE_KEY)
   ]);
-  return { settings, runtime, log };
+  return {
+    settings,
+    runtime,
+    log,
+    uiLanguage: uiLanguage[UI_LANGUAGE_KEY] || 'auto'
+  };
 }

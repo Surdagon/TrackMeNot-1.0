@@ -41,7 +41,7 @@ export default {
   corpusLanguage: '内蔵コーパスの言語',
   langRu: 'ロシア語',
   langEn: '英語',
-  langMix: 'ロシア語 + 英語',
+  langMix: 'すべての言語',
   importTitle: '.txt を読み込む',
   importDesc: 'ファイルをここにドロップするか、手動で選択してください。UTF-8。',
   chooseFile: 'ファイルを選択',

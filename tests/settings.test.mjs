@@ -4,6 +4,10 @@ import assert from 'node:assert/strict';
 import { DEFAULT_SETTINGS } from '../src/config.js';
 import { mergeSettings, sanitizeSettings } from '../src/settings.js';
 
+test('the default corpus language follows the interface language', () => {
+  assert.equal(sanitizeSettings(DEFAULT_SETTINGS).language, 'auto');
+});
+
 test('sanitizeSettings clamps numeric ranges', () => {
   const settings = sanitizeSettings({
     ...DEFAULT_SETTINGS,
