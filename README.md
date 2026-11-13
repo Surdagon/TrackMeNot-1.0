@@ -6,6 +6,9 @@ This is **not** a patch of the old Chrome port and **not** a fork of the Firefox
 
 **Languages:** [English](#english) · [Русский](#русский) · [Español](#español) · [Português (Brasil)](#português-brasil) · [Français](#français) · [Deutsch](#deutsch) · [Italiano](#italiano) · [日本語](#日本語) · [한국어](#한국어) · [简体中文](#简体中文)
 
+**Repository:** <https://github.com/Surdagon/TrackMeNot-1.0>  
+**Download:** <https://github.com/Surdagon/TrackMeNot-1.0/releases/latest>
+
 ---
 
 ## English
