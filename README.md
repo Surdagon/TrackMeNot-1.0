@@ -9,6 +9,8 @@ This is **not** a patch of the old Chrome port and **not** a fork of the Firefox
 **Repository:** <https://github.com/Surdagon/TrackMeNot-1.0>  
 **Download:** <https://github.com/Surdagon/TrackMeNot-1.0/releases/latest>
 
+Privacy statements below describe the default configuration. The experimental **Click search results** option is off by default and uses a temporary tab with the normal browser profile.
+
 ---
 
 ## English
@@ -22,16 +24,16 @@ The original Chrome port (`TrackMeNot-Chrome-master`, version 0.10.3) is a Manif
 | Area | Original Chrome port 0.10.3 | TrackMeNot 1.0 |
 |---|---|---|
 | Platform | Manifest V2; does not load in current Chrome | Manifest V3, service worker, `chrome.alarms` |
-| Cookies | Hidden tab / normal profile; cookies and history can be involved | No cookies: `credentials: 'omit'`, no `cookies` permission |
-| Page access | Content script on every HTTP(S) page and frame | No content scripts at all |
-| Permissions | `tabs`, `webNavigation`, all URLs | Only `storage`, `alarms`, and host permissions for search engines |
-| Hidden tabs | Tab mode opens an inactive tab | No tabs, no hidden windows |
-| Click simulation | Clicks search results/ads | No clicks at all; no click fraud |
+| Cookies | Hidden tab / normal profile; cookies and history can be involved | No cookies for synthetic requests: `credentials: 'omit'`; optional click mode uses the normal profile |
+| Page access | Content script on every HTTP(S) page and frame | No all-site content scripts; optional click mode injects one-off script only into its own temporary tab |
+| Permissions | `tabs`, `webNavigation`, all URLs | `storage`, `alarms`, `scripting` (optional click mode), host permissions for search engines |
+| Hidden tabs | Tab mode opens an inactive tab | No tabs by default; optional click mode opens a temporary inactive tab |
+| Click simulation | Clicks search results/ads | Off by default; optional click mode clicks one organic result, never ads |
 | Frequency | 10 queries per minute by default | 10 minutes by default; daily cap, active hours, backoff |
 | Query sources | Stale 2010 zeitgeist, RSS, DHS watchlist | 10 local language corpora + your own `.txt` list |
 | Logs | On by default, raw queries | Off by default; metadata only; query text is opt-in |
 | Languages | English/Russian UI fragments | 10 interface languages and 10 query corpora |
-| Tests | None | 23 unit tests |
+| Tests | None | 24 unit tests |
 
 ### Install
 
@@ -61,10 +63,11 @@ Format: one phrase per line, UTF-8, up to 5,000 lines, up to 200 characters per 
 ### Privacy
 
 - No cookies, no `Cookie` header, no `Referer`.
-- No content scripts, no reading pages, no history, no tabs.
+- No all-site content scripts and no reading pages. No history or tabs permissions.
+- **Click search results is off by default.** When enabled, it opens a temporary inactive tab, uses your normal browser profile/cookies/history, injects a one-off script into that tab, and clicks one organic result. It never clicks ads.
 - Settings, words, logs and statistics stay in `chrome.storage.local`; no sync, no analytics, no remote code.
 - Requests go directly to the selected search engines. Your IP is still visible. Use VPN/Tor and a separate browser profile if you need network anonymity.
-- Automated queries may violate search engine terms of service; keep the rate low and do not use this on someone else's account.
+- Automated queries and clicks may violate search engine terms of service; keep the rate low and do not use this on someone else's account.
 
 More details: [`PRIVACY.md`](PRIVACY.md).
 
@@ -93,12 +96,13 @@ MIT. The idea comes from [TrackMeNot](https://github.com/vtoubiana/TrackMeNot) b
 - здесь нет cookies, `Cookie`-заголовка и `Referer`;
 - нет content scripts и доступа ко всем сайтам;
 - нет `tabs`, `history`, `webNavigation` и `cookies`;
-- нет скрытых вкладок и кликов по выдаче/рекламе;
+- по умолчанию нет скрытых вкладок и кликов; дополнительная галка «Кликать по результатам поиска» выключена;
+- режим кликов использует временную вкладку, обычный профиль, cookies и историю и кликает только по органике, не по рекламе;
 - частота по умолчанию — 10 минут, есть дневной лимит, активные часы и backoff;
 - 10 локальных корпусов запросов (по одному на язык) или ваш `.txt`;
 - язык корпуса по умолчанию следует языку интерфейса/браузера;
 - логи по умолчанию выключены, текст запросов — только по желанию;
-- 10 языков интерфейса и 23 теста.
+- 10 языков интерфейса и 24 теста.
 
 **Установка:** `chrome://extensions/` → Developer mode → Load unpacked → папка `TrackMeNot-1.0`.
 
@@ -124,7 +128,7 @@ MIT. The idea comes from [TrackMeNot](https://github.com/vtoubiana/TrackMeNot) b
 - 10 minutos por defecto, límite diario, horas activas y backoff;
 - corpus local neutro o tu propia lista `.txt`;
 - registros desactivados por defecto; el texto de las consultas es opcional;
-- 10 idiomas de interfaz y 23 pruebas.
+- 10 idiomas de interfaz y 24 pruebas.
 
 **Instalación:** `chrome://extensions/` → modo desarrollador → Load unpacked → carpeta `TrackMeNot-1.0`.
 
@@ -150,7 +154,7 @@ Más detalles en la [sección en inglés](#english) y [`PRIVACY.md`](PRIVACY.md)
 - 10 minutos por padrão, limite diário, horário ativo e backoff;
 - corpus local neutro ou sua própria lista `.txt`;
 - logs desativados por padrão; texto das consultas é opcional;
-- 10 idiomas de interface e 23 testes.
+- 10 idiomas de interface e 24 testes.
 
 **Instalação:** `chrome://extensions/` → modo desenvolvedor → Load unpacked → pasta `TrackMeNot-1.0`.
 
@@ -176,7 +180,7 @@ Mais detalhes na [seção em inglês](#english) e em [`PRIVACY.md`](PRIVACY.md).
 - 10 minutes par défaut, limite quotidienne, heures actives et backoff ;
 - corpus local neutre ou votre propre liste `.txt` ;
 - journaux désactivés par défaut ; le texte des requêtes est optionnel ;
-- 10 langues d'interface et 23 tests.
+- 10 langues d'interface et 24 tests.
 
 **Installation :** `chrome://extensions/` → mode développeur → Load unpacked → dossier `TrackMeNot-1.0`.
 
@@ -202,7 +206,7 @@ Plus de détails dans la [section anglaise](#english) et [`PRIVACY.md`](PRIVACY.
 - standardmäßig 10 Minuten, Tageslimit, aktive Stunden und Backoff;
 - lokaler neutraler Korpus oder eigene `.txt`-Liste;
 - Protokolle standardmäßig aus; Abfragetext optional;
-- 10 Oberflächensprachen und 23 Tests.
+- 10 Oberflächensprachen und 24 Tests.
 
 **Installation:** `chrome://extensions/` → Entwicklermodus → Load unpacked → Ordner `TrackMeNot-1.0`.
 
@@ -228,7 +232,7 @@ Mehr Details im [englischen Abschnitt](#english) und in [`PRIVACY.md`](PRIVACY.m
 - 10 minuti predefiniti, limite giornaliero, ore attive e backoff;
 - corpus locale neutro o la tua lista `.txt`;
 - log disattivati per impostazione predefinita; testo delle query opzionale;
-- 10 lingue dell'interfaccia e 23 test.
+- 10 lingue dell'interfaccia e 24 test.
 
 **Installazione:** `chrome://extensions/` → modalità sviluppatore → Load unpacked → cartella `TrackMeNot-1.0`.
 
@@ -254,7 +258,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 既定 10 分間隔、1 日の上限、アクティブ時間、バックオフを備えています。
 - ローカルの中立コーパスまたは自分の `.txt` リストを使えます。
 - ログは既定でオフ、クエリ本文の記録は任意です。
-- 10 言語の UI と 23 のテスト。
+- 10 言語の UI と 24 のテスト。
 
 **インストール:** `chrome://extensions/` → デベロッパーモード → Load unpacked → `TrackMeNot-1.0` フォルダー。
 
@@ -280,7 +284,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 기본 10분 간격, 일일 한도, 활성 시간, 백오프를 지원합니다.
 - 로컬 중립 코퍼스 또는 내 `.txt` 목록을 사용할 수 있습니다.
 - 로그는 기본적으로 꺼져 있고, 검색어 텍스트 기록은 선택 사항입니다.
-- 10개 UI 언어와 23개 테스트.
+- 10개 UI 언어와 24개 테스트.
 
 **설치:** `chrome://extensions/` → 개발자 모드 → Load unpacked → `TrackMeNot-1.0` 폴더.
 
@@ -306,7 +310,7 @@ Dettagli nella [sezione inglese](#english) e in [`PRIVACY.md`](PRIVACY.md).
 - 默认 10 分钟一次，支持每日上限、活动时间和退避；
 - 使用本地中性语料或你自己的 `.txt` 列表；
 - 日志默认关闭，查询文本记录可选；
-- 10 种界面语言和 23 项测试。
+- 10 种界面语言和 24 项测试。
 
 **安装：** `chrome://extensions/` → 开发者模式 → Load unpacked → 选择 `TrackMeNot-1.0` 文件夹。
 

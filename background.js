@@ -161,6 +161,123 @@ function recordEngineHealth(engineId, outcome, now = Date.now()) {
   state.runtime.engineHealth[engineId] = health;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function waitForTabComplete(tabId, timeoutMs) {
+  const deadline = Date.now() + timeoutMs;
+  return (async () => {
+    while (Date.now() < deadline) {
+      try {
+        const tab = await chrome.tabs.get(tabId);
+        if (tab?.status === 'complete') return true;
+      } catch {
+        return false;
+      }
+      await sleep(500);
+    }
+    return false;
+  })();
+}
+
+// This function is serialized and injected into the temporary search tab.
+// It must be completely self-contained (no closure references).
+function pickAndClickResult(engineId) {
+  const selectors = {
+    google: ['#rso .yuRUbf > a[href]', '#rso h3 a[href]', '#search .g a[href]'],
+    bing: ['#b_results .b_algo h2 a[href]', '#b_results .b_algo a[href]'],
+    duckduckgo: ['#links .result__a[href]', 'article[data-testid="result"] h2 a[href]'],
+    brave: ['#results .snippet a[href]', '#results a[href]'],
+    startpage: ['.w-gl__result-title a[href]', '.w-gl__result a[href]'],
+    yandex: ['.serp-item .OrganicTitle-Link[href]', '.organic .OrganicTitle-Link[href]', '.serp-item a[href]']
+  };
+
+  const candidates = [];
+  const seen = new Set();
+  for (const selector of selectors[engineId] || []) {
+    for (const node of document.querySelectorAll(selector)) {
+      const anchor = node.closest('a[href]') || node;
+      if (!anchor || !anchor.href) continue;
+      if (anchor.closest('#tads, #bottomads, .ads-ad, [data-text-ad], [data-testid="ad"], .b_ad')) continue;
+
+      const href = anchor.href;
+      if (!/^https?:/i.test(href) || seen.has(href)) continue;
+
+      let url;
+      try {
+        url = new URL(href);
+      } catch {
+        continue;
+      }
+
+      if (/\/(search|preferences|settings|account|accounts|login|signin|support|policies|privacy|terms)(\/|\?|$)/i.test(url.pathname)) {
+        continue;
+      }
+      if (/google\./i.test(url.hostname) && !url.pathname.startsWith('/url')) continue;
+      if (url.hostname.endsWith('bing.com') && !url.pathname.startsWith('/ck/')) continue;
+
+      seen.add(href);
+      candidates.push(anchor);
+    }
+  }
+
+  if (!candidates.length) {
+    return { ok: false, reason: 'click-no-result' };
+  }
+
+  const chosen = candidates[Math.floor(Math.random() * candidates.length)];
+  const chosenUrl = chosen.href;
+  try {
+    chosen.click();
+  } catch {
+    chosen.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+  }
+  return { ok: true, url: chosenUrl };
+}
+
+async function clickSearchResult(searchUrl, engine) {
+  let tabId = null;
+  try {
+    const tab = await chrome.tabs.create({ url: searchUrl, active: false });
+    tabId = tab.id;
+
+    const loaded = await waitForTabComplete(tabId, 25000);
+    if (!loaded) {
+      return { ok: false, reason: 'click-timeout' };
+    }
+
+    // Let the engine finish rendering its result list.
+    await sleep(700 + Math.floor(Math.random() * 900));
+
+    let result = null;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      if (attempt > 0) await sleep(1200);
+      const injection = await chrome.scripting.executeScript({
+        target: { tabId },
+        func: pickAndClickResult,
+        args: [engine.id]
+      });
+      result = injection?.[0]?.result || { ok: false, reason: 'click-no-result' };
+      if (result.ok) break;
+    }
+
+    // Let the click navigation start before closing the tab.
+    await sleep(2200 + Math.floor(Math.random() * 2500));
+    return result || { ok: false, reason: 'click-no-result' };
+  } catch {
+    return { ok: false, reason: 'click-error' };
+  } finally {
+    if (tabId !== null) {
+      try {
+        await chrome.tabs.remove(tabId);
+      } catch {
+        // The tab may already be closed.
+      }
+    }
+  }
+}
+
 function classifyResponse(response, pagePeek = '') {
   if (response.type === 'opaque') {
     return { ok: false, status: 0, reason: 'opaque-response' };
@@ -297,6 +414,11 @@ async function performSearch(trigger = 'alarm', options = {}) {
     }
   }
 
+  let clickResult = null;
+  if (settings.simulateClicks && outcome.ok && !settings.localOnly && queryUrl) {
+    clickResult = await clickSearchResult(queryUrl, engine);
+  }
+
   await updateBadge();
 
   return {
@@ -307,6 +429,7 @@ async function performSearch(trigger = 'alarm', options = {}) {
     engineName: engine.name,
     query,
     durationMs,
+    click: clickResult,
     url: settings.logQueries ? queryUrl : undefined
   };
 }

@@ -94,6 +94,7 @@ export function sanitizeSettings(input) {
     : DEFAULT_SETTINGS.language;
 
   settings.localOnly = Boolean(settings.localOnly);
+  settings.simulateClicks = Boolean(settings.simulateClicks);
   settings.loggingEnabled = Boolean(settings.loggingEnabled);
   settings.logQueries = Boolean(settings.logQueries);
   settings.maxLogEntries = clamp(

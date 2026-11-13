@@ -149,6 +149,7 @@ function fillForm(nextSettings) {
   $('#customWeightValue').textContent = `${settings.customWeight}%`;
   populateQueryLanguages(settings.language);
   $('#localOnly').checked = settings.localOnly;
+  $('#simulateClicks').checked = settings.simulateClicks;
   $('#loggingEnabled').checked = settings.loggingEnabled;
   $('#logQueries').checked = settings.logQueries;
   $('#maxLogEntries').value = settings.maxLogEntries;
@@ -196,6 +197,7 @@ function collectFormSettings() {
       customWords: parsed.words,
       language: $('#language').value,
       localOnly: $('#localOnly').checked,
+      simulateClicks: $('#simulateClicks').checked,
       loggingEnabled: $('#loggingEnabled').checked,
       logQueries: $('#logQueries').checked,
       maxLogEntries: Number($('#maxLogEntries').value),

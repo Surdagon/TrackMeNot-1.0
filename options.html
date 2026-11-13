@@ -82,6 +82,14 @@
         </div>
         <div id="engineList" class="engine-list"></div>
         <p class="inline-note" data-i18n="enginesNote">If an engine shows CAPTCHA or consent, it is temporarily excluded from rotation.</p>
+
+        <label class="row-check row-check--boxed">
+          <input type="checkbox" id="simulateClicks">
+          <span>
+            <strong data-i18n="clickResultsTitle">Click search results</strong>
+            <small data-i18n="clickResultsDesc">Experimental: opens a temporary inactive tab and clicks one random organic result. Uses your browser profile, cookies and history. Off by default.</small>
+          </span>
+        </label>
       </section>
 
       <section class="card">
@@ -232,9 +240,10 @@
 
         <ul class="privacy-list">
           <li data-i18n="privacyCookies">No cookies. Requests use credentials: omit; the extension does not read or send cookies.</li>
-          <li data-i18n="privacyContent">No content scripts. It does not inject into pages or read what you browse.</li>
-          <li data-i18n="privacyPermissions">No history or tabs. It does not need tabs, history, or webNavigation permissions.</li>
+          <li data-i18n="privacyContent">No content scripts on the sites you browse. It does not read what you browse.</li>
+          <li data-i18n="privacyPermissions">No history or tabs permissions. Optional click mode uses a temporary tab and one-off scripting.</li>
           <li data-i18n="privacySync">No sync. Settings and words live in storage.local, not in the cloud.</li>
+          <li data-i18n="privacyClicks">Click mode is off by default. When enabled, it opens a temporary inactive tab, uses the normal browser profile, and clicks one organic result. It never clicks ads.</li>
           <li data-i18n="privacyIp">But: requests still go from your IP to the selected search engine. This is not anonymity; use VPN/Tor and a separate profile.</li>
         </ul>
 

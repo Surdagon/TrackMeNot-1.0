@@ -8,6 +8,11 @@ test('the default corpus language follows the interface language', () => {
   assert.equal(sanitizeSettings(DEFAULT_SETTINGS).language, 'auto');
 });
 
+test('click mode is off by default and can be enabled explicitly', () => {
+  assert.equal(sanitizeSettings(DEFAULT_SETTINGS).simulateClicks, false);
+  assert.equal(sanitizeSettings({ ...DEFAULT_SETTINGS, simulateClicks: true }).simulateClicks, true);
+});
+
 test('sanitizeSettings clamps numeric ranges', () => {
   const settings = sanitizeSettings({
     ...DEFAULT_SETTINGS,

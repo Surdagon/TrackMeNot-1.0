@@ -98,6 +98,7 @@ export const DEFAULT_SETTINGS = {
   customWords: [],
   language: 'auto',
   localOnly: false,
+  simulateClicks: false,
   loggingEnabled: false,
   logQueries: false,
   maxLogEntries: 200,
